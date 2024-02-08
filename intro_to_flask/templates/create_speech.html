@@ -1,0 +1,27 @@
+{% extends "layout.html" %} {% block content %}
+<h2>Speak me</h2>
+
+{% if success %}
+<p><b> You asked me: </b>"{{create_speech_prompt}}"</p>
+<p><b> How does this sound?: </b></p>
+<audio controls>
+  <source
+    src="data:audio/mp3;base64,{{ create_speech_response }}"
+    type="audio/mp3"
+  />
+  Your browser does not support the audio element.
+</audio>
+{% else %} {% for prompt in form.prompt.errors %}
+<div class="flash">{{ prompt }}</div>
+{% endfor %}
+
+<form action="{{ url_for('create_speech') }}" method="post">
+  <!-- 
+This form has no CSRF protection.  To add, see:
+https://flask-wtf.readthedocs.io/en/0.15.x/csrf/
+-->
+
+  {{ form.prompt.label }} {{ form.prompt }} {{ form.submit }}
+  <p>It will likely take a few seconds to generate the audio.</p>
+</form>
+{% endif %} {% endblock %}

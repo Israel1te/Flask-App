@@ -1,6 +1,6 @@
 import os
 import openai
-import re #regular expressions module
+import re # regular expressions module
 from markupsafe import escape #protects projects against injection attacks
 from intro_to_flask import app
 import sys 
