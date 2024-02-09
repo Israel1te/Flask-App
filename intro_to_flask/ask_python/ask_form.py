@@ -8,4 +8,5 @@ from wtforms import TextAreaField, SubmitField, validators, ValidationError
 
 class AskmeForm(Form):
     prompt = TextAreaField("Your Question",  [validators.InputRequired("Please enter a question.")])
+    role = TextAreaField("Role", [validators.InputRequired("Please enter a role.")])
     submit = SubmitField("Send") 
