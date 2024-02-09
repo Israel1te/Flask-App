@@ -11,3 +11,5 @@ venv/
 .project
 
 .mp3
+
+output.mp3
