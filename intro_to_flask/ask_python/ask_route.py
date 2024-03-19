@@ -4,6 +4,7 @@ from openai import OpenAI
 import re # regular expressions module
 from markupsafe import escape #protects projects against injection attacks
 from intro_to_flask import app
+import requests
 import sys 
 sys.dont_write_bytecode = True
 from flask import render_template, request, Flask, Blueprint
@@ -23,16 +24,26 @@ def askme():
         # The following response code adapted from example on: 
         # https://platform.openai.com/docs/api-reference/chat/create
         client = OpenAI()
-        response = client.chat.completions.create(
-          model="gpt-3.5-turbo",
-          messages=[
-            {"role": "system", "content": form.role.data},
-            {"role": "user", "content": form.prompt.data}
-          ],
-          max_tokens=150
-        )
+        response = client.moderations.create(input=form.prompt.data)
+        moderation_score = response.results[0].flagged
+        
+        print(moderation_score)
+
+        if moderation_score:
+           display_text = "Sorry I cannot help you with that. The prompt has tested for content that goes against the set moderations."
+           return render_template('askme.html', ask_me_prompt=form.prompt.data,ask_me_response=display_text,ask_me_role=form.role.data,success=True)
+        else:
+          response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+              {"role": "system", "content": form.role.data},
+              {"role": "user", "content": form.prompt.data}
+            ],
+            max_tokens=150
+          )
 
         display_text = response.choices[0].message.content
+        
         return render_template('askme.html', ask_me_prompt=form.prompt.data,ask_me_response=display_text,ask_me_role=form.role.data,success=True)
       
   elif request.method == 'GET':
