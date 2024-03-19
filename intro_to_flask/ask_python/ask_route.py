@@ -30,7 +30,7 @@ def askme():
         print(moderation_score)
 
         if moderation_score:
-           display_text = "Sorry I cannot help you with that. The prompt has tested for content that goes against the set moderations."
+           display_text = "Your request has been marked potentially harmful. Please modify it"
            return render_template('askme.html', ask_me_prompt=form.prompt.data,ask_me_response=display_text,ask_me_role=form.role.data,success=True)
         else:
           response = client.chat.completions.create(
